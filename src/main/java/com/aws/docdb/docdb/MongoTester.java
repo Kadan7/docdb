@@ -31,7 +31,7 @@ public class MongoTester {
         criteria.where("1=1");
         criteria.and("nickName").regex("^" + "CCTV*");
         Query query = null;
-        query = Query.query(criteria).withHint("{nickname_index:1}").limit(10);
+        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
 
        List<Users> users =  mongoTemplate.find(query, Users.class);
 
