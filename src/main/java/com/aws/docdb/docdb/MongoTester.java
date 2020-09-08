@@ -2,12 +2,8 @@ package com.aws.docdb.docdb;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -37,7 +33,7 @@ public class MongoTester {
         Query query = null;
         query = Query.query(criteria).withHint("nickname_index").limit(10);
 
-       List<User> users =  mongoTemplate.find(query,User.class);
+       List<Users> users =  mongoTemplate.find(query, Users.class);
 
        if(users!=null)
            users.parallelStream().forEach(u->System.out.println(u.getNickName()));
