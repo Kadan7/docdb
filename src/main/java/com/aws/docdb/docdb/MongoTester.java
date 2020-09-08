@@ -26,6 +26,8 @@ public class MongoTester {
     @Autowired
     MongoTemplate mongoTemplate;
 
+
+    @GetMapping("/my")
     public String saythis(){
 
         System.out.println("now ....");
