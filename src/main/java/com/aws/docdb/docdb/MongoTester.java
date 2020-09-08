@@ -9,14 +9,42 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Iterator;
+import java.util.List;
 
 
 @RestController
 public class MongoTester {
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    public String saythis(){
+
+        System.out.println("now ....");
+        Criteria criteria = new Criteria();
+        criteria.where("1=1");
+        criteria.and("nickName").regex("^" + "CCTV*");
+        Query query = null;
+        query = Query.query(criteria).withHint("nickname_1").limit(10);
+
+       List<User> users =  mongoTemplate.find(query,User.class);
+
+       if(users!=null)
+           users.parallelStream().forEach(u->System.out.println(u.getNickName()));
+
+
+        return "done";
+    }
+
+
     @GetMapping("/hello")
     public String sayHello(){
 
