@@ -48,7 +48,7 @@ public class MongoTester {
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
 //        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
 //        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
-        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index");
+        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index:1");
         Iterator it = mycoll.iterator();
         while(it.hasNext()){
             Document doc1 = (Document) it.next();
