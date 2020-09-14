@@ -12,13 +12,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -63,8 +61,6 @@ public class MongoTester {
 
 
 
-        System.out.println("now ....");
-        long start = System.currentTimeMillis();
 //        Criteria criteria = new Criteria();
 //        criteria.where("1=1");
 //        criteria.and("nickName").regex("^" + "CCTV*");
@@ -83,7 +79,20 @@ public class MongoTester {
 //        }
 
 
+        MongoClient mongoClient =
+                new MongoClient(
+                        new MongoClientURI("mongodb://junjie:Kadan1016@junjie-doc-db.cluster-cb22o7m9zgip.ap-southeast-1.docdb.amazonaws.com:27017/?authSource=admin&ssl=false"));
 
+        System.out.println("now ....");
+        long start = System.currentTimeMillis();
+
+        MongoDatabase db = mongoClient.getDatabase("junjie");
+        FindIterable<Document> mycoll = db.getCollection("users").find().hintString("nickname_index:1");
+        Iterator it = mycoll.iterator();
+        while(it.hasNext()){
+            Document doc1 = (Document) it.next();
+            System.out.println(doc1.get("nickName"));
+        }
 
         long end = System.currentTimeMillis();
 
