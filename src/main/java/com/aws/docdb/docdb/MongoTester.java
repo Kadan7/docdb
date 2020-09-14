@@ -67,13 +67,6 @@ public class MongoTester {
             System.out.println(users.size());
         }
 
-
-        List<Users> users1 = userRepo.findByNicknameLike("1000");
-
-        while (users1!=null){
-            System.out.println(users1.size());
-        }
-
         long end = System.currentTimeMillis();
 
         System.out.println("time cost for the query :::: " + (end - start));
