@@ -65,13 +65,10 @@ public class MongoTester {
 
 
         PageRequest pageRequest = PageRequest.of(1, 10);
-        Page<Users> users = userRepo.findByNickNameLike("%1000",pageRequest);
+        List<Users> users = userRepo.findByNickName("/^1000/");
 
-        if(users != null)
-        for (int i = 0; i < users.getContent().size(); i++) {
-            System.out.println(users.getContent().get(i));
-            System.out.println(users.getTotalElements());
-        }
+        if(users!=null)
+            System.out.println(users.size());
 
 
         long end = System.currentTimeMillis();
