@@ -43,7 +43,7 @@ public class MongoTester {
 //        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
 
         String tableName = "users";
-        String sql = "[{nickName:^CCTV*},{'$hint':{nickname_index:1},{'$limit':10}]";
+        String sql = "[{nickName:'^CCTV*'},{'$hint':{nickname_index:1},{'$limit':10}]";
         List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
         AggregateIterable<Document> aggregate = mongoTemplate.getDb().getCollection(tableName).aggregate(basicDBObjectList);
         MongoCursor<Document> mongoCursor = aggregate.iterator();
