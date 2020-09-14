@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface UserRepo extends CrudRepository<Users, String> {
 
-    @Query("[{name : {$regex : ?0}},{limit:10}]")
+    @Query("{name : {$regex : ?0}}")
     List<Users> findByNickNameLike(String nickName);
 }
