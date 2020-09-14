@@ -46,8 +46,8 @@ public class MongoTester {
 
         String tableName = "users";
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
-        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
-        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
+//        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
+//        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
         mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^CCTV*")).hintString("nickname_index");
         long end = System.currentTimeMillis();
 
