@@ -8,6 +8,9 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Collation;
@@ -31,7 +34,7 @@ public class MongoTester {
     UserRepo userRepo;
 
 
-
+    @SuppressWarnings("rawtypes")
     @GetMapping("/my")
     public String saythis(){
 
@@ -61,11 +64,15 @@ public class MongoTester {
 
 
 
-        List<Users> users = userRepo.findByNickNameLike("%1000");
+        PageRequest pageRequest = PageRequest.of(1, 10);
+        Page<Users> users = userRepo.findByNickNameLike("%1000",pageRequest);
 
-        if (users!=null){
-            System.out.println(users.size());
+        if(users != null)
+        for (int i = 0; i < users.getContent().size(); i++) {
+            System.out.println(users.getContent().get(i));
+            System.out.println(users.getTotalElements());
         }
+
 
         long end = System.currentTimeMillis();
 
