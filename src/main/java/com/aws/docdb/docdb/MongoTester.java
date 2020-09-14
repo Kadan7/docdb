@@ -1,17 +1,23 @@
 package com.aws.docdb.docdb;
 
+import com.alibaba.fastjson.JSONArray;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,17 +32,34 @@ public class MongoTester {
     @GetMapping("/my")
     public String saythis(){
 
+
+
         System.out.println("now ....");
-        Criteria criteria = new Criteria();
-        criteria.where("1=1");
-        criteria.and("nickName").regex("^" + "CCTV*");
-        Query query = null;
-        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
+        long start = System.currentTimeMillis();
+//        Criteria criteria = new Criteria();
+//        criteria.where("1=1");
+//        criteria.and("nickName").regex("^" + "CCTV*");
+//        Query query = null;
+//        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
 
-       List<Users> users =  mongoTemplate.find(query, Users.class);
+        String tableName = "users";
+        String sql = "[{nickName:/^CCTV*/},{'$hint':{nickname_index:1},{'$limit':10}]";
+        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
+        AggregateIterable<Document> aggregate = mongoTemplate.getDb().getCollection(tableName).aggregate(basicDBObjectList);
+        MongoCursor<Document> mongoCursor = aggregate.iterator();
+        List<Document> documentList = new ArrayList<>(1000);
+        while (mongoCursor.hasNext()){
+            Document doc = mongoCursor.next();
+            documentList.add(doc);
+        }
 
-       if(users!=null)
-           users.parallelStream().forEach(u->System.out.println(u.getNickName()));
+        long end = System.currentTimeMillis();
+
+        System.out.println("time cost for the query :::: " + (end - start));
+//        List<Users> users =  mongoTemplate.find(query, Users.class);
+//
+//       if(users!=null)
+//           users.parallelStream().forEach(u->System.out.println(u.getNickName()));
 
 
         return "done";
