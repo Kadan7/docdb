@@ -8,7 +8,9 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
@@ -46,14 +48,7 @@ public class MongoTester {
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
         String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
         List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
-        AggregateIterable<Document> aggregate = mongoTemplate.getDb().getCollection(tableName).aggregate(basicDBObjectList);
-        MongoCursor<Document> mongoCursor = aggregate.iterator();
-        List<Document> documentList = new ArrayList<>(1000);
-        while (mongoCursor.hasNext()){
-            Document doc = mongoCursor.next();
-            documentList.add(doc);
-        }
-
+        mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^CCTV*")).hintString("nickname_index");
         long end = System.currentTimeMillis();
 
         System.out.println("time cost for the query :::: " + (end - start));
