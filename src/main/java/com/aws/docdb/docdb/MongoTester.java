@@ -1,13 +1,9 @@
 package com.aws.docdb.docdb;
 
 import com.alibaba.fastjson.JSONArray;
-import com.mongodb.BasicDBObject;
+import com.mongodb.*;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -20,8 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 @RestController
@@ -29,6 +27,35 @@ public class MongoTester {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+
+    @GetMapping("/native")
+    public String nat(){
+
+        ServerAddress address = new ServerAddress("junjie-doc-db.cluster-cb22o7m9zgip.ap-southeast-1.docdb.amazonaws.com", 27017);
+        MongoCredential credential = MongoCredential.createCredential("junjie",
+                "junjie", "Kadan1016".toCharArray());
+
+        MongoClient client = new MongoClient(address, Arrays.asList(credential));
+
+        System.out.println("now ....");
+        long start = System.currentTimeMillis();
+
+
+        DB mongoDb = client.getDB("junjie");
+        DBCollection doc = mongoDb.getCollection("users");
+        BasicDBObject cond = new BasicDBObject("$regex", "^1000*");
+        DBCursor cursor = doc.find(cond);
+        cursor.hint("nickname_index");
+        Iterator it = cursor.iterator();
+        while(it.hasNext()){
+            Document doc1 = (Document) it.next();
+            System.out.println(doc1.get("nickName"));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("time cost for the query :::: " + (end - start));
+        return "hello";
+    }
 
 
     @GetMapping("/my")
@@ -48,12 +75,15 @@ public class MongoTester {
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
 //        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
 //        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
-        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index:1");
-        Iterator it = mycoll.iterator();
-        while(it.hasNext()){
-            Document doc1 = (Document) it.next();
-            System.out.println(doc1.get("nickName"));
-        }
+//        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index");
+//        Iterator it = mycoll.iterator();
+//        while(it.hasNext()){
+//            Document doc1 = (Document) it.next();
+//            System.out.println(doc1.get("nickName"));
+//        }
+
+
+
 
         long end = System.currentTimeMillis();
 
