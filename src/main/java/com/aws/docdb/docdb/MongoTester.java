@@ -80,7 +80,7 @@ public class MongoTester {
         Document doc = new Document();
         doc.append("nickName","^CCTV*");
 
-        FindIterable<Document> mycoll = testDB.getCollection("users").find(doc).hintString("nickname_1").limit(10);
+        FindIterable<Document> mycoll = testDB.getCollection("users").find(Filters.regex("nickName","^CCTV*")).hintString("nickname_1").limit(10);
 
         Iterator it = mycoll.iterator();
         while(it.hasNext()){
