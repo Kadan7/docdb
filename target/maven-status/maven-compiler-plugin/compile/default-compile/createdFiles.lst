@@ -1,3 +1,4 @@
 com/aws/docdb/docdb/MongoTester.class
 com/aws/docdb/docdb/DocdbApplication.class
 com/aws/docdb/docdb/Users.class
+com/aws/docdb/docdb/UserRepo.class

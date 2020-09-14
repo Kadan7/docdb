@@ -10,6 +10,7 @@ import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.StringUtils;
@@ -26,34 +27,9 @@ public class MongoTester {
     @Autowired
     MongoTemplate mongoTemplate;
 
+    @Autowired
+    UserRepo userRepo;
 
-    @GetMapping("/native")
-    public String nat(){
-
-        ServerAddress address = new ServerAddress("junjie-doc-db.cluster-cb22o7m9zgip.ap-southeast-1.docdb.amazonaws.com", 27017);
-        MongoCredential credential = MongoCredential.createCredential("junjie",
-                "junjie", "Kadan1016".toCharArray());
-
-        MongoClient client = new MongoClient(address, Arrays.asList(credential));
-
-        System.out.println("now ....");
-        long start = System.currentTimeMillis();
-
-
-        DB mongoDb = client.getDB("junjie");
-        DBCollection doc = mongoDb.getCollection("users");
-        BasicDBObject cond = new BasicDBObject("$regex", "^1000*");
-        DBCursor cursor = doc.find(cond);
-        cursor.hint("nickname_index");
-        Iterator it = cursor.iterator();
-        while(it.hasNext()){
-            Document doc1 = (Document) it.next();
-            System.out.println(doc1.get("nickName"));
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("time cost for the query :::: " + (end - start));
-        return "hello";
-    }
 
 
     @GetMapping("/my")
@@ -79,19 +55,23 @@ public class MongoTester {
 //        }
 
 
-        MongoClient mongoClient =
-                new MongoClient(
-                        new MongoClientURI("mongodb://junjie:Kadan1016@junjie-doc-db.cluster-cb22o7m9zgip.ap-southeast-1.docdb.amazonaws.com:27017/?authSource=admin&ssl=false"));
 
         System.out.println("now ....");
         long start = System.currentTimeMillis();
 
-        MongoDatabase db = mongoClient.getDatabase("junjie");
-        FindIterable<Document> mycoll = db.getCollection("users").find().hintString("nickname_index:1");
-        Iterator it = mycoll.iterator();
-        while(it.hasNext()){
-            Document doc1 = (Document) it.next();
-            System.out.println(doc1.get("nickName"));
+
+
+        List<Users> users = userRepo.findByNickNameLike("1000");
+
+        while (users!=null){
+            System.out.println(users.size());
+        }
+
+
+        List<Users> users1 = userRepo.findByNicknameLike("1000");
+
+        while (users1!=null){
+            System.out.println(users1.size());
         }
 
         long end = System.currentTimeMillis();
