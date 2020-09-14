@@ -63,7 +63,7 @@ public class MongoTester {
 
         List<Users> users = userRepo.findByNickNameLike("1000");
 
-        while (users!=null){
+        if (users!=null){
             System.out.println(users.size());
         }
 
