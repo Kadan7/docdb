@@ -1,5 +1,7 @@
 package com.aws.docdb.docdb;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 import java.util.List;
 
 public class Users {
@@ -74,6 +76,7 @@ public class Users {
 
     private List<String> preferenceList;
     private int sex;
+    @Indexed
     private String nickName;
     private String headPic;
     private int vip;
