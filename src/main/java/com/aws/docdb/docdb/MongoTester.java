@@ -48,7 +48,13 @@ public class MongoTester {
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
 //        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
 //        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
-        mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^CCTV*")).hintString("nickname_index");
+        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index");
+        Iterator it = mycoll.iterator();
+        while(it.hasNext()){
+            Document doc1 = (Document) it.next();
+            System.out.println(doc1.get("nickName"));
+        }
+
         long end = System.currentTimeMillis();
 
         System.out.println("time cost for the query :::: " + (end - start));
