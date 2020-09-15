@@ -70,7 +70,7 @@ public class MongoTester {
 //
 
 
-        List<Users> users = userRepo.findTop10CustomByRegExNickName(nickName);
+        List<Users> users = userRepo.findTop10CustomByRegExNickName("^"+nickName + "*");
 
         if(users !=null)
             System.out.println(" >>> " + users.size());
