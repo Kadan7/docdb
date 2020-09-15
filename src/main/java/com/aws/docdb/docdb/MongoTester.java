@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -36,8 +37,8 @@ public class MongoTester {
 
 
     @SuppressWarnings("rawtypes")
-    @GetMapping("/my")
-    public String saythis(){
+    @GetMapping("/my/{nickName}")
+    public String saythis(@PathVariable String nickName){
 
 
 
@@ -67,12 +68,14 @@ public class MongoTester {
 //            System.out.println(users.size());
 //
 //
-        long end = System.currentTimeMillis();
 
-        List<Users> users = userRepo.findTop10CustomByRegExNickName("%1000");
+
+        List<Users> users = userRepo.findTop10CustomByRegExNickName(nickName);
 
         if(users !=null)
             System.out.println(" >>> " + users.size());
+
+        long end = System.currentTimeMillis();
 
         System.out.println("time cost for the query :::: " + (end - start));
 //        List<Users> users =  mongoTemplate.find(query, Users.class);
