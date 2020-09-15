@@ -74,11 +74,21 @@ public class MongoTester {
         }catch(Exception e){
             System.out.println("hint nickName:1 failed");
             try{
+                System.out.println("tyring nickName");
                 FindIterable<Document> mycoll2 =   mycoll.hintString("nickName");
+                MongoCursor myso = mycoll2.cursor();
+                while(myso.hasNext()){
+                    myso.next();
+                }
             }catch(Exception e2){
-                System.out.println("hint nickName:1 failed");
+                System.out.println("hint nickName failed");
                 try{
-                FindIterable<Document> mycoll3 =   mycoll.hintString("nickName_1");}catch(Exception e3){
+                FindIterable<Document> mycoll3 =   mycoll.hintString("nickName_1");
+                    MongoCursor myso = mycoll3.cursor();
+                    while(myso.hasNext()){
+                        myso.next();
+                    }
+                }catch(Exception e3){
                     System.out.println("hint nickName_1 failed");
                 }
             }
