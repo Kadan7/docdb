@@ -42,16 +42,6 @@ public class MongoTester {
 
 
 
-//        Criteria criteria = new Criteria();
-//        criteria.where("1=1");
-//        criteria.and("nickName").regex("^" + "CCTV*");
-//        Query query = null;
-//        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
-
-        String tableName = "users";
-
-        System.out.println("now ....");
-        long start = System.currentTimeMillis();
 
 
        // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
@@ -68,12 +58,32 @@ public class MongoTester {
 //            System.out.println(users.size());
 //
 //
+        long start = System.currentTimeMillis();
+//
+//        List<Users> users = userRepo.findTop10CustomByRegExNickName("^"+nickName + "*");
 
+        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection("users").find(Filters.regex("nickName","^1000*")).limit(10);
 
-        List<Users> users = userRepo.findTop10CustomByRegExNickName("^"+nickName + "*");
+        try{
+        FindIterable<Document> mycoll1 =   mycoll.hintString("{nickName:1}");
+            MongoCursor myso = mycoll1.cursor();
+            while(myso.hasNext()){
+                myso.next();
+            }
 
-        if(users !=null)
-            System.out.println(" >>> " + users.size());
+        }catch(Exception e){
+            System.out.println("hint nickName:1 failed");
+            try{
+                FindIterable<Document> mycoll2 =   mycoll.hintString("nickName");
+            }catch(Exception e2){
+                System.out.println("hint nickName:1 failed");
+                try{
+                FindIterable<Document> mycoll3 =   mycoll.hintString("nickName_1");}catch(Exception e3){
+                    System.out.println("hint nickName_1 failed");
+                }
+            }
+        }
+
 
         long end = System.currentTimeMillis();
 
