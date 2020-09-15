@@ -5,6 +5,7 @@ import com.mongodb.*;
 import com.mongodb.MongoClient;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,31 +48,31 @@ public class MongoTester {
 //        query = Query.query(criteria).withHint("{nickName:1}").limit(10);
 
         String tableName = "users";
-       // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
-//        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
-//        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
-//        FindIterable<Document> mycoll = mongoTemplate.getDb().getCollection(tableName).find(Filters.regex("nickName","^1000*")).hintString("nickname_index");
-//        Iterator it = mycoll.iterator();
-//        while(it.hasNext()){
-//            Document doc1 = (Document) it.next();
-//            System.out.println(doc1.get("nickName"));
-//        }
-
-
 
         System.out.println("now ....");
         long start = System.currentTimeMillis();
 
 
-
-        PageRequest pageRequest = PageRequest.of(1, 10);
-        List<Users> users = userRepo.findByNickName("/^1000/");
-
-        if(users!=null)
-            System.out.println(users.size());
+       // String sql = "[{$match:{nickName:'^CCTV*'}},{'$hint':{nickname_index:1}},{'$limit':10}]";
+//        String sql = "[{$match:{nickName:'^CCTV*'}},{'$limit':10}]";
+//        List<BasicDBObject> basicDBObjectList = JSONArray.parseArray(sql, BasicDBObject.class);
 
 
+
+//
+//        PageRequest pageRequest = PageRequest.of(1, 10);
+//        List<Users> users = userRepo.findByNickName("/^1000/");
+//
+//        if(users!=null)
+//            System.out.println(users.size());
+//
+//
         long end = System.currentTimeMillis();
+
+        List<Users> users = userRepo.findTop10CustomByRegExNickName("%1000");
+
+        if(users !=null)
+            System.out.println(" >>> " + users.size());
 
         System.out.println("time cost for the query :::: " + (end - start));
 //        List<Users> users =  mongoTemplate.find(query, Users.class);

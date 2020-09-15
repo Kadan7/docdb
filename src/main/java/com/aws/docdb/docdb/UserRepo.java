@@ -11,8 +11,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.awt.print.Pageable;
 import java.util.List;
 
-public interface UserRepo extends CrudRepository<Users, String> {
+public interface UserRepo extends MongoRepository<Users, String> {
 
-    @Query(value = "db.users.find({nickName:?1}).hint({nickname_index:1}).limit(10)")
-    List<Users> findByNickName(String nickName);
+    @Query("{nickName : {$regex : ?0}}")
+    List<Users> findTop10CustomByRegExNickName(String nickName);
 }
