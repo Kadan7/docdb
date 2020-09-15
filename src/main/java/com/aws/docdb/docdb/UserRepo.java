@@ -13,6 +13,6 @@ import java.util.List;
 
 public interface UserRepo extends MongoRepository<Users, String> {
 
-    @Query("{nickName : {$regex : ?0},{$limit:10}}")
+    @Query("{nickName : {$regex : ?0},$limit:10}")
     List<Users> findTop10CustomByRegExNickName(String nickName);
 }
